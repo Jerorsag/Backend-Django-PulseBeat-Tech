@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-x@v@7v7ij+n#n5owp0004^!!js)h9uj-uea$t1)r(swh-(offl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["pulsebeat-tech-api.onrender.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
