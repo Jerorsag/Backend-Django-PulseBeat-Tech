@@ -278,28 +278,51 @@ def initiate_paypal_payment(request):
         else:
             return Response({'error': payment.error}, status=400)
 
-@api_view(["POST"])
+
+@api_view(["GET"])  # Cambiado a GET
 def paypal_payment_callback(request):
-    payment_id = request.query_params.get('paymentId')
-    payer_id = request.query_params.get('PayerID')
-    ref = request.query_params.get('ref')
+    try:
+        payment_id = request.GET.get('paymentId')  # Cambiado a request.GET
+        payer_id = request.GET.get('PayerID')  # Cambiado a request.GET
+        ref = request.GET.get('ref')  # Cambiado a request.GET
 
-    user = request.user
+        print(f"Callback recibido - payment_id: {payment_id}, payer_id: {payer_id}, ref: {ref}")
 
-    print("refff", ref)
+        if not payment_id or not payer_id or not ref:
+            return Response({'error': 'Missing required parameters'}, status=400)
 
-    transaction = Transaction.objects.get(ref=ref)
+        # Encontrar la transacción sin depender del usuario autenticado
+        transaction = Transaction.objects.get(ref=ref)
 
-    if payment_id and payer_id:
+        # Obtener el usuario de la transacción, no de la solicitud
+        user = transaction.user
+
+        # Verifica el pago con PayPal y ejecuta la transacción
         payment = paypalrestsdk.Payment.find(payment_id)
 
-        transaction.status = "completed"
-        transaction.save()
-        cart = transaction.cart
-        cart.paid = True
-        cart.user = user
-        cart.save()
+        # Ejecutar el pago - paso crucial que faltaba
+        if payment.execute({"payer_id": payer_id}):
+            # Actualizar el estado de la transacción
+            transaction.status = "completed"
+            transaction.save()
 
-        return Response({'message': 'Payment successful!', 'subMessage': 'You have succesfully made payment for items you purchased!'})
-    else:
-        return Response({'error': "Invalid payment details."}, status=400)
+            # Actualizar el carrito
+            cart = transaction.cart
+            cart.paid = True
+            cart.user = user
+            cart.save()
+
+            return Response({
+                'message': 'Payment successful!',
+                'subMessage': 'You have successfully made payment for items you purchased!'
+            })
+        else:
+            return Response({'error': payment.error}, status=400)
+
+    except Transaction.DoesNotExist:
+        return Response({'error': 'Transaction not found'}, status=404)
+    except Exception as e:
+        import traceback
+        print(f"Error en paypal_payment_callback: {str(e)}")
+        print(traceback.format_exc())
+        return Response({'error': str(e)}, status=500)
