@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | PulseBeat Tech{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">PulseBeat Tech Administration</a></h1>
+{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  #header {
+    background: #6f42c1;
+    color: #fff;
+  }
+  
+  #branding h1 {
+    color: #fff;
+  }
+  
+  .module h2, .module caption, .inline-group h2 {
+    background: #6f42c1;
+  }
+  
+  div.breadcrumbs {
+    background: #9575cd;
+  }
+  
+  a:link, a:visited {
+    color: #6f42c1;
+  }
+  
+  .button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #6f42c1;
+  }
+  
+  .button:hover, input[type=submit]:hover, input[type=button]:hover {
+    background: #9575cd;
+  }
+  
+  .button.default, input[type=submit].default, .submit-row input.default {
+    background: #6f42c1;
+  }
+</style>
+{% endblock %}

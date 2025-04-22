@@ -1,0 +1,4 @@
+# Permite importar directamente desde el paquete services
+from .ollama_service import get_ollama_response, is_ollama_available
+from .product_service import search_products, get_featured_products, get_products_by_category, get_product_details
+from .response_formatter import format_bot_response, format_product_recommendations, format_single_product_details, get_predefined_response

@@ -20,9 +20,15 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView)
 
+# Personalizar títulos del admin
+admin.site.site_header = "PulseBeat Tech Administration"
+admin.site.site_title = "PulseBeat Tech Admin"
+admin.site.index_title = "Welcome to PulseBeat Tech Admin"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", include("shop_app.urls")),
+    path('', include('chatbot.urls', namespace='chatbot')),  # Añadir las URLs del chatbot
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
 ]

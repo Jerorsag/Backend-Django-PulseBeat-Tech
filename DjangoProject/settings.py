@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'core',
     'shop_app',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'chatbot'
 ]
 
 MIDDLEWARE = [
@@ -65,7 +66,7 @@ ROOT_URLCONF = 'DjangoProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],  # Añade esta línea o modifica la existente
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -162,3 +163,5 @@ PAYPAL_CLIENT_SECRET = 'EJsjLaSqQQEFpCsMGZqKNCdTePB4cDE87WD_3WYS0Xkqx2DJdP5ggHYc
 PAYPAL_MODE = 'sandbox'
 
 REACT_BASE_URL = os.getenv("REACT_BASE_URL", "http://localhost:5173")
+# Al final de settings.py
+FLASK_CHATBOT_URL = os.getenv("FLASK_CHATBOT_URL", "http://localhost:5000")
